@@ -33,19 +33,31 @@
 		
 		"Keys"
 		{
-			"SwingOrStab::KNIFE_RANGE_SHORT_Verify"
+			"SwingOrStab::KNIFE_RANGE_SHORT"
 			{
 				"linux" "F3 0F 10 05 1C 5D 0F 01"
 				"windows" "B8 20 00 00 00"
+			}
+
+			"SwingOrStab::KNIFE_RANGE_LONG"
+			{
+				"linux" "F3 0F 10 05 20 AB 0F 01"
+				"windows" "B9 30 00 00 00"
 			}
 		}
 		
 		"Offsets"
 		{
-			"SwingOrStab::KNIFE_RANGE_SHORT_Verify"
+			"SwingOrStab::KNIFE_RANGE_SHORT"
 			{
 				"linux" "44"
 				"windows" "52"
+			}
+
+			"SwingOrStab::KNIFE_RANGE_LONG"
+			{
+				"linux" "73"
+				"windows" "57"
 			}
 		}
 		
