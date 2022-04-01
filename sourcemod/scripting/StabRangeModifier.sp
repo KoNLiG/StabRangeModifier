@@ -13,6 +13,14 @@ Address pKNIFE_RANGE_LONG;
 ConVar stab_range_secondary;
 ConVar stab_range_primary;
 
+enum
+{
+	OS_LINUX,
+	OS_WINDOWS
+}
+
+int g_OS;
+
 public Plugin myinfo = 
 {
 	name = "[CS:GO] Stab-Range-Modifier", 
@@ -59,6 +67,11 @@ public void OnPluginStart()
 		SetFailState("Failed to verify address 'SwingOrStab::KNIFE_RANGE_LONG'");
 	}
 	
+	if ((g_OS = gamedata.GetOffset("OS")) == -1)
+	{
+		SetFailState("Failed to get server OS");
+	}
+
 	delete gamedata;
 	
 	// ConVar configuration.
@@ -84,13 +97,13 @@ public void OnPluginStart()
 // Restore the original values.
 public void OnPluginEnd()
 {
-	StoreToAddress(pKNIFE_RANGE_SHORT, float(KNIFE_RANGE_SHORT), NumberType_Int32);
-	StoreToAddress(pKNIFE_RANGE_LONG, float(KNIFE_RANGE_LONG), NumberType_Int32);
+	StoreToAddress(pKNIFE_RANGE_SHORT, g_OS == OS_LINUX ? float(KNIFE_RANGE_SHORT) : KNIFE_RANGE_SHORT, NumberType_Int32);
+	StoreToAddress(pKNIFE_RANGE_LONG, g_OS == OS_LINUX ? float(KNIFE_RANGE_LONG) : KNIFE_RANGE_LONG, NumberType_Int32);
 }
 
 void Hook_RangeChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.FloatValue, NumberType_Int32);
+	StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, g_OS == OS_LINUX ? convar.FloatValue : convar.IntValue, NumberType_Int32);
 }
 
 bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
@@ -111,7 +124,6 @@ bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
 	
 	StrCat(bytes, sizeof(bytes), " ");
 	
-	// Prepare loop vars.
 	char byte[16];
 	int current_pos, pos, len;
 	
