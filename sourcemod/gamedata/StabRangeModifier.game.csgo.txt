@@ -1,0 +1,63 @@
+"Games"
+{
+	"csgo"
+	{	
+		"Addresses"
+		{
+			"SwingOrStab::KNIFE_RANGE_SHORT"
+			{
+				"signature"	"CKnife::SwingOrStab"
+				"linux"
+				{
+					"read"	"48"
+				}
+				"windows"
+				{
+					"read"	"53"
+				}
+			}
+			
+			"SwingOrStab::KNIFE_RANGE_LONG"
+			{
+				"signature"	"CKnife::SwingOrStab"
+				"linux"
+				{
+					"read"	"60"
+				}
+				"windows"
+				{
+					"read"	"58"
+				}
+			}
+		}
+		
+		"Keys"
+		{
+			"SwingOrStab::KNIFE_RANGE_SHORT_Verify"
+			{
+				"linux" "F3 0F 10 05 1C 5D 0F 01"
+				"windows" "B8 20 00 00 00"
+			}
+		}
+		
+		"Offsets"
+		{
+			"SwingOrStab::KNIFE_RANGE_SHORT_Verify"
+			{
+				"linux" "44"
+				"windows" "52"
+			}
+		}
+		
+		"Signatures"
+		{
+			// string: "Weapon_Knife.Stab", first xref
+			"CKnife::SwingOrStab"
+			{
+				"library"	"server"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x81\xEC\xFC\x02\x00\x00\x8B\x5D\x08"
+				"windows"	"\x55\x8B\xEC\x83\xE4\xF8\x81\xEC\xD8\x01\x00\x00"
+			}
+		}
+	}
+}
