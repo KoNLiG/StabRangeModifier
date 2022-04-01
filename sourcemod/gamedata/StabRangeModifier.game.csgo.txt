@@ -1,7 +1,7 @@
 "Games"
 {
 	"csgo"
-	{	
+	{
 		"Addresses"
 		{
 			"SwingOrStab::KNIFE_RANGE_SHORT"
@@ -13,7 +13,7 @@
 				}
 				"windows"
 				{
-					"read"	"53"
+					"offset"	"53"
 				}
 			}
 			
@@ -26,22 +26,23 @@
 				}
 				"windows"
 				{
-					"read"	"58"
+					"offset"	"58"
 				}
 			}
 		}
 		
+		// Both "Keys" and "Offsets" sections used to verify the addresses above.
 		"Keys"
 		{
 			"SwingOrStab::KNIFE_RANGE_SHORT"
 			{
-				"linux" "F3 0F 10 05 1C 5D 0F 01"
+				"linux" "F3 0F 10 05"
 				"windows" "B8 20 00 00 00"
 			}
-
+			
 			"SwingOrStab::KNIFE_RANGE_LONG"
 			{
-				"linux" "F3 0F 10 05 20 AB 0F 01"
+				"linux" "F3 0F 10 05"
 				"windows" "B9 30 00 00 00"
 			}
 		}
@@ -53,7 +54,7 @@
 				"linux" "44"
 				"windows" "52"
 			}
-
+			
 			"SwingOrStab::KNIFE_RANGE_LONG"
 			{
 				"linux" "73"

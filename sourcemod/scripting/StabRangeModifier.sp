@@ -39,14 +39,14 @@ public void OnPluginStart()
 	// Parse gamedata addresses.
 	GameData gamedata = new GameData("StabRangeModifier.game.csgo");
 	
-	if (!(pKNIFE_RANGE_SHORT = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_SHORT")) || VerifyAddress(gamedata, "SwingOrStab::KNIFE_RANGE_SHORT"))
+	if (!(pKNIFE_RANGE_SHORT = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_SHORT")) || !VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_SHORT"))
 	{
-		SetFailState("Failed to get 'SwingOrStab::KNIFE_RANGE_SHORT' address");
+		SetFailState("Failed to get/verify 'SwingOrStab::KNIFE_RANGE_SHORT' address");
 	}
 	
-	if (!(pKNIFE_RANGE_LONG = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_LONG")) || VerifyAddress(gamedata, "SwingOrStab::KNIFE_RANGE_LONG"))
+	if (!(pKNIFE_RANGE_LONG = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_LONG")) || !VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_LONG"))
 	{
-		SetFailState("Failed to get 'SwingOrStab::KNIFE_RANGE_LONG' address");
+		SetFailState("Failed to get/verify 'SwingOrStab::KNIFE_RANGE_LONG' address");
 	}
 	
 	delete gamedata;
@@ -81,26 +81,26 @@ public void OnPluginEnd()
 void Hook_RangeChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.FloatValue, NumberType_Int32);
-} 
+}
 
-bool VerifyAddress(GameData gamedata, const char[] key)
+bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
 {
 	Address addr;
 	int current_pos, pos, offset, len;
 	char byte[16], bytes[512];
-
+	
 	if (!gamedata.GetKeyValue(key, bytes, sizeof(bytes)))
 	{
 		return false;
 	}
-
+	
 	if ((offset = gamedata.GetOffset(key)) == -1)
 	{
 		return false;
 	}
-
-	addr = gamedata.GetMemSig(key) + view_as<Address>(offset);
-		
+	
+	addr = gamedata.GetMemSig(signature) + view_as<Address>(offset);
+	
 	StrCat(bytes, sizeof(bytes), " ");
 	
 	while ((pos = SplitString(bytes[current_pos], " ", byte, sizeof(byte))) != -1)
@@ -111,14 +111,14 @@ bool VerifyAddress(GameData gamedata, const char[] key)
 		
 		if (byte[0])
 		{
-			if (LoadFromAddress(addr + view_as<Address>(len), NumberType_Int8) != StringToInt(byte, 0xF))
+			if (LoadFromAddress(addr + view_as<Address>(len), NumberType_Int8) != StringToInt(byte, 0x10))
 			{
 				return false;
 			}
-
+			
 			len++;
 		}
 	}
-
+	
 	return true;
-}
+} 
