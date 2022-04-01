@@ -15,7 +15,7 @@ ConVar stab_range_primary;
 
 enum
 {
-	OS_LINUX,
+	OS_LINUX, 
 	OS_WINDOWS
 }
 
@@ -71,7 +71,7 @@ public void OnPluginStart()
 	{
 		SetFailState("Failed to get server OS");
 	}
-
+	
 	delete gamedata;
 	
 	// ConVar configuration.
@@ -97,37 +97,35 @@ public void OnPluginStart()
 // Restore the original values.
 public void OnPluginEnd()
 {
-	switch (g_OS)
+	any range_short, range_long;
+	if (g_OS == OS_LINUX)
 	{
-		case OS_LINUX:
-		{
-			StoreToAddress(pKNIFE_RANGE_SHORT, float(KNIFE_RANGE_SHORT), NumberType_Int32);
-			StoreToAddress(pKNIFE_RANGE_LONG, float(KNIFE_RANGE_LONG), NumberType_Int32);
-		}
-		
-		case OS_WINDOWS:
-		{
-			StoreToAddress(pKNIFE_RANGE_SHORT, KNIFE_RANGE_SHORT, NumberType_Int32);
-			StoreToAddress(pKNIFE_RANGE_LONG, KNIFE_RANGE_LONG, NumberType_Int32);
-		}
+		range_short = float(KNIFE_RANGE_SHORT);
+		range_long = float(KNIFE_RANGE_LONG);
 	}
+	else
+	{
+		range_short = KNIFE_RANGE_SHORT;
+		range_long = KNIFE_RANGE_LONG;
+	}
+	
+	StoreToAddress(pKNIFE_RANGE_SHORT, range_short, NumberType_Int32);
+	StoreToAddress(pKNIFE_RANGE_LONG, range_long, NumberType_Int32);
 }
 
 void Hook_RangeChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	switch (g_OS)
+	any range;
+	if (g_OS == OS_LINUX)
 	{
-		case OS_LINUX:
-		{
-			StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.FloatValue, NumberType_Int32);
-		}
-		
-		case OS_WINDOWS:
-		{
-			StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.IntValue, NumberType_Int32);
-		}
+		range = convar.FloatValue;
+	}
+	else
+	{
+		range = convar.IntValue;
 	}
 	
+	StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, range, NumberType_Int32);
 }
 
 bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)

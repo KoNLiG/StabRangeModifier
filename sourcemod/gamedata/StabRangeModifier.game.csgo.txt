@@ -52,9 +52,9 @@
 			"OS"
 			{
 				"linux" "0"
-				"windows "1"
+				"windows" "1"
 			}
-
+			
 			"SwingOrStab::KNIFE_RANGE_SHORT"
 			{
 				"linux" "44"
