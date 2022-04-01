@@ -39,14 +39,24 @@ public void OnPluginStart()
 	// Parse gamedata addresses.
 	GameData gamedata = new GameData("StabRangeModifier.game.csgo");
 	
-	if (!(pKNIFE_RANGE_SHORT = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_SHORT")) || !VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_SHORT"))
+	if (!(pKNIFE_RANGE_SHORT = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_SHORT")))
 	{
-		SetFailState("Failed to get/verify 'SwingOrStab::KNIFE_RANGE_SHORT' address");
+		SetFailState("Failed to get address 'SwingOrStab::KNIFE_RANGE_SHORT'");
 	}
 	
-	if (!(pKNIFE_RANGE_LONG = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_LONG")) || !VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_LONG"))
+	if (!VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_SHORT"))
 	{
-		SetFailState("Failed to get/verify 'SwingOrStab::KNIFE_RANGE_LONG' address");
+		SetFailState("Failed to verify address 'SwingOrStab::KNIFE_RANGE_SHORT'");
+	}
+	
+	if (!(pKNIFE_RANGE_LONG = gamedata.GetAddress("SwingOrStab::KNIFE_RANGE_LONG")))
+	{
+		SetFailState("Failed to get address 'SwingOrStab::KNIFE_RANGE_LONG'");
+	}
+	
+	if (!VerifyAddress(gamedata, "CKnife::SwingOrStab", "SwingOrStab::KNIFE_RANGE_LONG"))
+	{
+		SetFailState("Failed to verify address 'SwingOrStab::KNIFE_RANGE_LONG'");
 	}
 	
 	delete gamedata;
@@ -85,23 +95,25 @@ void Hook_RangeChange(ConVar convar, const char[] oldValue, const char[] newValu
 
 bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
 {
-	Address addr;
-	int current_pos, pos, offset, len;
-	char byte[16], bytes[512];
-	
+	char bytes[256];
 	if (!gamedata.GetKeyValue(key, bytes, sizeof(bytes)))
 	{
 		return false;
 	}
 	
-	if ((offset = gamedata.GetOffset(key)) == -1)
+	int offset = gamedata.GetOffset(key);
+	if (offset == -1)
 	{
 		return false;
 	}
 	
-	addr = gamedata.GetMemSig(signature) + view_as<Address>(offset);
+	Address address = gamedata.GetMemSig(signature) + view_as<Address>(offset);
 	
 	StrCat(bytes, sizeof(bytes), " ");
+	
+	// Prepare loop vars.
+	char byte[16];
+	int current_pos, pos, len;
 	
 	while ((pos = SplitString(bytes[current_pos], " ", byte, sizeof(byte))) != -1)
 	{
@@ -111,7 +123,7 @@ bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
 		
 		if (byte[0])
 		{
-			if (LoadFromAddress(addr + view_as<Address>(len), NumberType_Int8) != StringToInt(byte, 0x10))
+			if (LoadFromAddress(address + view_as<Address>(len), NumberType_Int8) != StringToInt(byte, 0x10))
 			{
 				return false;
 			}
