@@ -97,13 +97,37 @@ public void OnPluginStart()
 // Restore the original values.
 public void OnPluginEnd()
 {
-	StoreToAddress(pKNIFE_RANGE_SHORT, g_OS == OS_LINUX ? float(KNIFE_RANGE_SHORT) : KNIFE_RANGE_SHORT, NumberType_Int32);
-	StoreToAddress(pKNIFE_RANGE_LONG, g_OS == OS_LINUX ? float(KNIFE_RANGE_LONG) : KNIFE_RANGE_LONG, NumberType_Int32);
+	switch (g_OS)
+	{
+		case OS_LINUX:
+		{
+			StoreToAddress(pKNIFE_RANGE_SHORT, float(KNIFE_RANGE_SHORT), NumberType_Int32);
+			StoreToAddress(pKNIFE_RANGE_LONG, float(KNIFE_RANGE_LONG), NumberType_Int32);
+		}
+		
+		case OS_WINDOWS:
+		{
+			StoreToAddress(pKNIFE_RANGE_SHORT, KNIFE_RANGE_SHORT, NumberType_Int32);
+			StoreToAddress(pKNIFE_RANGE_LONG, KNIFE_RANGE_LONG, NumberType_Int32);
+		}
+	}
 }
 
 void Hook_RangeChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, g_OS == OS_LINUX ? convar.FloatValue : convar.IntValue, NumberType_Int32);
+	switch (g_OS)
+	{
+		case OS_LINUX:
+		{
+			StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.FloatValue, NumberType_Int32);
+		}
+		
+		case OS_WINDOWS:
+		{
+			StoreToAddress(convar == stab_range_secondary ? pKNIFE_RANGE_SHORT : pKNIFE_RANGE_LONG, convar.IntValue, NumberType_Int32);
+		}
+	}
+	
 }
 
 bool VerifyAddress(GameData gamedata, const char[] signature, const char[] key)
