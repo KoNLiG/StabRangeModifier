@@ -24,7 +24,7 @@ int g_OS;
 public Plugin myinfo = 
 {
 	name = "[CS:GO] Stab-Range-Modifier", 
-	author = "KoNLiG", 
+	author = "KoNLiG & LuqS", 
 	description = "Provides the ability to change CS:GO stab ranges by cvars.", 
 	version = "1.0.0", 
 	url = "https://github.com/KoNLiG/StabRangeModifier"
